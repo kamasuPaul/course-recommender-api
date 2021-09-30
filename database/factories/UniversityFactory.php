@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\university;
+use App\Models\University;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UniversityFactory extends Factory
@@ -12,7 +12,7 @@ class UniversityFactory extends Factory
      *
      * @var string
      */
-    protected $model = university::class;
+    protected $model = University::class;
 
     /**
      * Define the model's default state.

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UtilController;
 use Illuminate\Support\Facades\Route;
@@ -123,3 +124,17 @@ Route::get('ping', [UtilController::class, 'serverTime'])
 Route::post('/account/disable/{token}', [DisableAccountController::class, 'disable'])
     ->middleware(['throttle:hard'])
     ->name('api.account.disable');
+
+//create universities group crud endpoints,auth middleware
+Route::prefix('universities')->middleware('auth')->group(function () {
+    //create university
+    Route::post('/', [UniversityController::class, 'store']);
+    //get all universities
+    Route::get('/', [UniversityController::class, 'index']);
+    //get university by id
+    Route::get('/{id}', [UniversityController::class, 'show']);
+    //update university
+    Route::patch('/{id}', [UniversityController::class, 'update']);
+    //delete university
+    Route::delete('/{id}', [UniversityController::class, 'destroy']);
+});
