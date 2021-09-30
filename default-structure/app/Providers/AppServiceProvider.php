@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Session\SessionServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,4 +14,13 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(SessionServiceProvider::class);
         }
     }
+    /**
+ * Bootstrap any application services.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Schema::defaultStringLength(191);
+}
 }
