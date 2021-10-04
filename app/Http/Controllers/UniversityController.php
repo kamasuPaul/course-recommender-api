@@ -26,7 +26,7 @@ class UniversityController extends Controller
     public function store(Request $request)
     {
         //validate request parameters
-        $validated = $this->validate($request, [
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'short_name' => 'string|max:255',
             'address' => 'string|max:255',
@@ -52,7 +52,6 @@ class UniversityController extends Controller
         $university->short_name = $request->short_name;
         $university->address = $request->address;
         $university->city = $request->city;
-        $university->zip = $request->zip;
         $university->phone = $request->phone;
         $university->fax = $request->fax;
         $university->email = $request->email;
