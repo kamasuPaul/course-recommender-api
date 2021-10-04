@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UserController;
@@ -127,14 +128,16 @@ Route::post('/account/disable/{token}', [DisableAccountController::class, 'disab
 
 //create universities group crud endpoints,auth middleware
 Route::prefix('universities')->middleware('auth')->group(function () {
-    //create university
-    Route::post('/', [UniversityController::class, 'store']);
-    //get all universities
-    Route::get('/', [UniversityController::class, 'index']);
-    //get university by id
-    Route::get('/{id}', [UniversityController::class, 'show']);
-    //update university
-    Route::patch('/{id}', [UniversityController::class, 'update']);
-    //delete university
-    Route::delete('/{id}', [UniversityController::class, 'destroy']);
+    Route::post('/', [UniversityController::class, 'store']);    //create university
+    Route::get('/', [UniversityController::class, 'index']); //get all universities
+    Route::get('/{id}', [UniversityController::class, 'show']); //get university by id
+    Route::patch('/{id}', [UniversityController::class, 'update']); //update university
+    Route::delete('/{id}', [UniversityController::class, 'destroy']); //delete university
+});
+Route::prefix('courses')->middleware('auth')->group(function () {
+    Route::post('/', [CourseController::class, 'store']);
+    Route::get('/', [CourseController::class, 'index']);
+    Route::get('/{id}', [CourseController::class, 'show']);
+    Route::patch('/{id}', [CourseController::class, 'update']);
+    Route::delete('/{id}', [CourseController::class, 'destroy']);
 });
