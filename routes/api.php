@@ -127,14 +127,14 @@ Route::post('/account/disable/{token}', [DisableAccountController::class, 'disab
     ->name('api.account.disable');
 
 //create universities group crud endpoints,auth middleware
-Route::prefix('universities')->middleware('auth')->group(function () {
+Route::prefix('universities')->middleware(['auth:api'])->group(function () {
     Route::post('/', [UniversityController::class, 'store']);    //create university
     Route::get('/', [UniversityController::class, 'index']); //get all universities
     Route::get('/{id}', [UniversityController::class, 'show']); //get university by id
     Route::patch('/{id}', [UniversityController::class, 'update']); //update university
     Route::delete('/{id}', [UniversityController::class, 'destroy']); //delete university
 });
-Route::prefix('courses')->middleware('auth')->group(function () {
+Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::post('/', [CourseController::class, 'store']);
     Route::get('/', [CourseController::class, 'index']);
     Route::get('/{id}', [CourseController::class, 'show']);
