@@ -15,7 +15,13 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable(false);
+            $table->string('code')->nullable();
+            $table->string('description')->nullable();
+            $table->enum('level',['O','A'])->nullable(false);
+            $table->boolean('subsidiary')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
