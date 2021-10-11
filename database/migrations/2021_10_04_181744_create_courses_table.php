@@ -15,11 +15,18 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->string('university_id');
+            $table->string('name')->nullable(false);
+            $table->string('code')->nullable(false)->unique();
+            $table->string('tag')->nullable(true);
+            $table->integer('years')->nullable(false)->default(3);
+            $table->integer('tuition_fees')->nullable(false)->default(0);
+            $table->foreignId('university_id')->nullable(false);
+            $table->json('essential_subjects')->nullable(false);
+            $table->json('relevant_subjects')->nullable(false);
+            $table->json('desirable_subjects')->nullable(false);
             $table->foreign('university_id')->references('id')->on('universities')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
