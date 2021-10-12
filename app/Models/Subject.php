@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    protected $casts = [
+        'subsidiary' => 'boolean',
+    ];
+    public function setSubsidiaryAttribute($value)
+    {
+        $this->attributes['subsidiary'] = (boolean) $value;
+    }
 }
