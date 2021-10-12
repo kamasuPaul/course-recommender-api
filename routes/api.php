@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UtilController;
@@ -140,4 +142,18 @@ Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::get('/{id}', [CourseController::class, 'show']);
     Route::patch('/{id}', [CourseController::class, 'update']);
     Route::delete('/{id}', [CourseController::class, 'destroy']);
+});
+Route::group(['prefix'=>'subjects','midddleware'=>'auth:api'],function () {
+    Route::post('/', [SubjectController::class, 'store']);
+    Route::get('/', [SubjectController::class, 'index']);
+    Route::get('/{id}', [SubjectController::class, 'show']);
+    Route::patch('/{id}', [SubjectController::class, 'update']);
+    Route::delete('/{id}', [SubjectController::class, 'destroy']);
+});
+Route::group(['prefix'=>'results','midddleware'=>'auth:api'],function () {
+    Route::post('/', [ResultController::class, 'store']);
+    Route::get('/', [ResultController::class, 'index']);
+    Route::get('/{id}', [ResultController::class, 'show']);
+    Route::patch('/{id}', [ResultController::class, 'update']);
+    Route::delete('/{id}', [ResultController::class, 'destroy']);
 });
