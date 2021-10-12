@@ -59,7 +59,7 @@ class LoginController extends Controller
 
         try {
             $this->checkUserIfIsActive($user, $request);
-            $this->checkIfUserHasVerifiedEmail($user, $request);
+            // $this->checkIfUserHasVerifiedEmail($user, $request);
             $data = $this->getDeviceInfo($request);
             $data['user_id'] = $user->id;
             $this->checkIfIsDeviceIsAuthorized($user, $data);
