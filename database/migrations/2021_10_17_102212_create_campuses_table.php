@@ -17,7 +17,7 @@ class CreateCampusesTable extends Migration
             $table->id();
             $table->string('name')->nullable(false);
             $table->foreignId('university_id')->nullable(false);
-            $table->foreign('university_id')->references('id')->on('universities');
+            $table->foreign('university_id')->references('id')->on('universities')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
