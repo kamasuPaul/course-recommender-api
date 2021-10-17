@@ -30,6 +30,7 @@ class CourseController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:20|unique:courses,code',
             'university_id' => 'required|exists:universities,id',
+            'campus_id' => 'exists:campuses,id',
             //essential subjects are required
             'essential_subjects' => 'required|array',
             'essential_subjects.*' => 'required|exists:subjects,id',
@@ -45,6 +46,7 @@ class CourseController extends Controller
         $course = new Course();
         $course->name = $request->name;
         $course->code = $request->code;
+        $course->campus_id = $request->campus_id;
         $course->university_id = $request->university_id;
         //save the essential, relevant and other subjects
         $course->essential_subjects = json_encode($request->essential_subjects);

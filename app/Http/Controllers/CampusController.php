@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\campus;
+use App\Models\Campus;
 use Illuminate\Http\Request;
 
 class CampusController extends Controller
@@ -14,7 +14,8 @@ class CampusController extends Controller
      */
     public function index()
     {
-        //
+        $courses = Campus::all();
+        return response()->json($courses,200);
     }
 
     /**
@@ -24,7 +25,7 @@ class CampusController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -35,16 +36,21 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'university_id'=>'exists:universities,id'
+        ]);
+        $course = Campus::create($validatedData);
+        return response()->json($course,200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\campus  $campus
+     * @param  \App\Models\Campus  $campus
      * @return \Illuminate\Http\Response
      */
-    public function show(campus $campus)
+    public function show(Campus $campus)
     {
         //
     }
@@ -52,10 +58,10 @@ class CampusController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\campus  $campus
+     * @param  \App\Models\Campus  $campus
      * @return \Illuminate\Http\Response
      */
-    public function edit(campus $campus)
+    public function edit(Campus $campus)
     {
         //
     }
@@ -64,10 +70,10 @@ class CampusController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\campus  $campus
+     * @param  \App\Models\Campus  $campus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, campus $campus)
+    public function update(Request $request, Campus $campus)
     {
         //
     }
@@ -75,10 +81,10 @@ class CampusController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\campus  $campus
+     * @param  \App\Models\Campus  $campus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(campus $campus)
+    public function destroy(Campus $campus)
     {
         //
     }

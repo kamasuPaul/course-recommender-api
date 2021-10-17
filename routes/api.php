@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ResultController;
@@ -135,6 +136,13 @@ Route::prefix('universities')->middleware(['auth:api'])->group(function () {
     Route::get('/{id}', [UniversityController::class, 'show']); //get university by id
     Route::patch('/{id}', [UniversityController::class, 'update']); //update university
     Route::delete('/{id}', [UniversityController::class, 'destroy']); //delete university
+});
+Route::prefix('campuses')->middleware(['auth:api'])->group(function () {
+    Route::post('/', [CampusController::class, 'store']);   
+    Route::get('/', [CampusController::class, 'index']); 
+    Route::get('/{id}', [CampusController::class, 'show']); 
+    Route::patch('/{id}', [CampusController::class, 'update']); 
+    Route::delete('/{id}', [CampusController::class, 'destroy']);
 });
 Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::post('/', [CourseController::class, 'store']);
