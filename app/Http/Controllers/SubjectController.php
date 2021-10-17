@@ -30,7 +30,7 @@ class SubjectController extends Controller
             'code'=>'string|max:20|unique:subjects,code',
             'level'=>'required|in:O,A',
             'description'=>'string',
-            'subsidiary'=>'required|in:true,false',
+            'subsidiary'=>'required|boolean',
         ]);
         $course = Subject::create($validatedData);
         return response()->json($course,200);
