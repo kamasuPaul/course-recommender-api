@@ -142,6 +142,7 @@ Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::get('/{id}', [CourseController::class, 'show']);
     Route::patch('/{id}', [CourseController::class, 'update']);
     Route::delete('/{id}', [CourseController::class, 'destroy']);
+    Route::get('/eligble', [CourseController::class, 'getEligibleCourses']);
 });
 Route::group(['prefix'=>'subjects','midddleware'=>'auth:api'],function () {
     Route::post('/', [SubjectController::class, 'store']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Result;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -86,5 +87,19 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         //
+    }
+
+    public function getEligibleCourses(Request $request)
+    {
+        $validated = $request->validate(
+            [
+                'result' => 'required|exists:results,id',
+                'user' => 'required|exists:users,id'
+            ]
+        );
+        $result = Result::with('result_subjects')->findOrFail($request->result);
+        $subjects = $result->result_subjects->level(Result::A_LEVEL)->only('subject_Id');
+        $courses = Course::whereIn('essential',$subjects)->get();
+        return response()->json($courses,200);
     }
 }
