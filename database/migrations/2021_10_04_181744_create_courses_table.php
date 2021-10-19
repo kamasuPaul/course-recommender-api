@@ -16,7 +16,7 @@ class CreateCoursesTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->string('code')->nullable(false)->unique();
+            $table->string('code')->nullable(false);
             $table->enum('type',['DAY','AFTERNOON','EVENING','EXTERNAL','EXECUTIVE'])->nullable(true);
             $table->string('tag')->nullable(true);
             $table->integer('years')->nullable(false)->default(3);
