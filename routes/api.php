@@ -146,11 +146,11 @@ Route::prefix('campuses')->middleware(['auth:api'])->group(function () {
 });
 Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::post('/', [CourseController::class, 'store']);
+    Route::get('/eligble', [CourseController::class, 'getEligibleCourses']);
     Route::get('/', [CourseController::class, 'index']);
     Route::get('/{id}', [CourseController::class, 'show']);
     Route::patch('/{id}', [CourseController::class, 'update']);
     Route::delete('/{id}', [CourseController::class, 'destroy']);
-    Route::get('/eligble', [CourseController::class, 'getEligibleCourses']);
 });
 Route::group(['prefix'=>'subjects','midddleware'=>'auth:api'],function () {
     Route::post('/', [SubjectController::class, 'store']);
