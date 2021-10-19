@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Log;
 
 class CourseController extends Controller
 {
@@ -117,7 +118,7 @@ class CourseController extends Controller
         );
         $result = Result::with('result_subjects')->findOrFail($request->result);
         //get student subject list
-        $subjects = $result->result_subjects->where('level', Result::A_LEVEL)->only('subject_Id');
+        $subjects = $result->result_subjects->where('level', Result::A_LEVEL);
         //declare list of ineligble course
         $ineligble_courses = [];
         //declare list of eligble courses
@@ -128,24 +129,28 @@ class CourseController extends Controller
         foreach ($courses as $course) {
             //get its essential_required subjects
             $essential_required = $course->getEssentialRequiredSubjects();
-            //get its essential_optional subjects
-            $essential_optional = $course->getEssentialOptionalSubjects();
             //foreach essential_required subject
             $not_elible = false;
             foreach ($essential_required as $subject) {
                 //find subject in the student subject list
-                $subject_found = $subjects->where('subject_Id', $subject->id)->first();
+                $subject_found = $subjects->firstWhere('subject_id', $subject->id);
                 //if not found, add course to ineligble courses list.
                 if (!$subject_found) {
+                    Log::debug("not found");
                     array_push($ineligble_courses, $course);
                     $not_elible = true;
                     break;
+                }else{
+                    Log::debug("found");
                 }
+                
             }
 
             //continue to next course in list
             if ($not_elible) continue;
             //now look at the essential_optional
+            //get its essential_optional subjects
+            $essential_optional = $course->getEssentialOptionalSubjects();
             //get no of required essential_optional subjects, using essential relationship
             $no_of_required_essential_optional = $course->get_no_of_required_essential_optional();
             //declare array of found subjects
@@ -157,7 +162,7 @@ class CourseController extends Controller
                     break;
                 }
                 //try and find it in the essential_optional subject list
-                $found = $essential_optional->where('id', $subject->id)->first();
+                $found = $essential_optional->where('subject_id', $subject->id)->first();
                 //add it to found subjects
                 array_push($found_subjects, $found);
             }
