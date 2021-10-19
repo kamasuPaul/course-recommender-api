@@ -17,7 +17,9 @@ class ResultController extends Controller
      */
     public function index()
     {
-        //
+        //get all results and return them
+        $results = Result::with('result_subjects')->get();
+        return response()->json($results);
     }
 
     /**

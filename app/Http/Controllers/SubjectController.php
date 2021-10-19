@@ -14,7 +14,9 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        //return all subjects
+        $subjects = Subject::all();
+        return response()->json($subjects,200);
     }
 
     /**
