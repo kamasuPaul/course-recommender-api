@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SubjectController extends Controller
 {
@@ -12,11 +13,14 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //return all subjects
-        $subjects = Subject::all();
-        return response()->json($subjects,200);
+        $per_page = min($request->input('per_page', 200), 200);
+        $subjects = QueryBuilder::for(Subject::class)
+            ->allowedFilters(['level', 'name', 'subsidiary'])
+            ->paginate($per_page);
+        return response()->json($subjects, 200);
     }
 
     /**
@@ -29,13 +33,13 @@ class SubjectController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'code'=>'string|max:20|unique:subjects,code',
-            'level'=>'required|in:O,A',
-            'description'=>'string',
-            'subsidiary'=>'required|boolean',
+            'code' => 'string|max:20|unique:subjects,code',
+            'level' => 'required|in:O,A',
+            'description' => 'string',
+            'subsidiary' => 'required|boolean',
         ]);
         $course = Subject::create($validatedData);
-        return response()->json($course,200);
+        return response()->json($course, 200);
     }
 
     /**
