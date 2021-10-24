@@ -19,6 +19,7 @@
     "ext-pdo": "*",
     "fideloper/proxy": "^4.1",
     "fntneves/laravel-transactional-events": "^2.0",
+    "fruitcake/laravel-cors": "^2.0",
     "ibrunotome/google2fa-laravel": "^1.0",
     "jenssegers/agent": "^2.6",
     "laravel/framework": "^8.0",

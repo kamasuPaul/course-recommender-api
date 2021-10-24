@@ -45,7 +45,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show an user.
+     * Show a user.
      */
     public function show(Request $request, User $user): UserResource
     {

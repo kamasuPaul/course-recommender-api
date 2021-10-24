@@ -21,6 +21,7 @@ use Illuminate\Http\Middleware\SetCacheHeaders;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
+use Fruitcake\Cors\HandleCors;
 
 class Kernel extends HttpKernel
 {
@@ -39,6 +40,7 @@ class Kernel extends HttpKernel
         TrustProxies::class,
         SetLocale::class,
         SetCacheHeaders::class,
+        HandleCors::class
     ];
 
     /**
