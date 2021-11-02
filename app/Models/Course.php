@@ -17,6 +17,7 @@ class Course extends Model
         'relevant_subjects' => 'array',
         'desirable_subjects' => 'array'
     ];
+    protected $with = ['campus'];
     public $appends = ['essential_required','essential_optional'];
     public function user()
     {
@@ -62,6 +63,29 @@ class Course extends Model
         // return Subject::whereIn('id', $this->relevant_subjects)->get();
         $subjects = Subject::whereIn('id', [87, 61, 86, 72])->get();
         return $subjects;
+    }
+    public function getEssentialSubjects(){
+        //1.Get the relationship of the essential subjects
+        $relationship = $this->essential_relationship;
+        Log::debug($relationship);
+        //2.Get the essential subjects
+        $essential_subjects = [];
+        if($relationship == "and"){
+            Log::debug("and");
+            $essential_subjects = $this->getEssentialRequiredSubjects();
+        }
+        if($relationship == "two_best_done"){
+            Log::debug("two_best_done");
+            $essential_subjects = $this->getEssentialOptionalSubjects();
+        }
+        if($relationship == "and/or"){
+            Log::debug("and/or");
+            $list1 = $this->getEssentialRequiredSubjects();
+            $list2 = $this->getEssentialOptionalSubjects();
+            //add list1 to list2
+            $essential_subjects = $list1->merge($list2);
+        }
+        return collect($essential_subjects);
     }
     public function get_no_of_required_essential_optional()
     {
