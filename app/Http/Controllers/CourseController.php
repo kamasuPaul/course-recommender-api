@@ -6,6 +6,8 @@ use App\Http\Resources\CourseCollection;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Models\Result;
+use App\Models\ResultSubject;
+use Doctrine\DBAL\Driver\PDO\Result as PDOResult;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Log;
@@ -98,8 +100,8 @@ class CourseController extends Controller
             'type' => Rule::in(['DAY', 'AFTERNOON', 'EVENING', 'EXTERNAL', 'EXECUTIVE']),
             'university_id' => 'exists:universities,id',
             'campus_id' => 'exists:campuses,id',
-            'essential_relationship' => Rule::in(['and','one_best_done','one','or_and','and/or', 'and_or', 'two_best_done']),
-            'relevant_relationship' => Rule::in(['and','one_best_done','one','or_and','and/or', 'and_or', 'two_best_done']),
+            'essential_relationship' => Rule::in(['and', 'one_best_done', 'one', 'or_and', 'and/or', 'and_or', 'two_best_done']),
+            'relevant_relationship' => Rule::in(['and', 'one_best_done', 'one', 'or_and', 'and/or', 'and_or', 'two_best_done']),
             //essential_required
             'essential_required_subjects' => 'array',
             'essential_required_subjects.*' => '',
@@ -114,21 +116,21 @@ class CourseController extends Controller
             'desirable_subjects.*' => 'required|exists:subjects,id',
 
         ]);
-        if($request->has('essential_relationship')) $course->essential_relationship = $request->essential_relationship;
-        if($request->has('relevant_relationship')) $course->relevant_relationship = $request->relevant_relationship;
+        if ($request->has('essential_relationship')) $course->essential_relationship = $request->essential_relationship;
+        if ($request->has('relevant_relationship')) $course->relevant_relationship = $request->relevant_relationship;
 
         //update the essential_required subject
-        if($request->has('essential_required_subjects')){
+        if ($request->has('essential_required_subjects')) {
             $course->essential_required_subjects = json_encode($request->essential_required_subjects);
         }
         //update the essential_optional_subjects
-        if($request->has('essential_optional_subjects')){
+        if ($request->has('essential_optional_subjects')) {
             $course->essential_optional_subjects = json_encode($request->essential_optional_subjects);
         }
-        if($request->has('relevant_subjects')){
+        if ($request->has('relevant_subjects')) {
             $course->relevant_subjects = json_encode($request->relevant_subjects);
         }
-        if($request->has('desirable_subjects')){
+        if ($request->has('desirable_subjects')) {
             $course->desirable_subjects = json_encode($request->desirable_subjects);
         }
         $course->save();
@@ -173,7 +175,7 @@ class CourseController extends Controller
             //get its essential_required subjects
             Log::debug($course->name);
             $essential_required = $course->getEssentialRequiredSubjects();
-            Log::debug($essential_required);
+            // Log::debug($essential_required);
             //foreach essential_required subject
             $not_elible = false;
             foreach ($essential_required as $subject) {
@@ -205,16 +207,59 @@ class CourseController extends Controller
                 //try and find it in the essential_optional subject list
                 $found = $essential_optional->where('subject_id', $subject->id)->first();
                 //add it to found subjects
-                if($found) {
+                if ($found) {
                     array_push($found_subjects, $found);
                 }
             }
             //if found has equal or greater than required subjects, add course to eligble courses list
             if (count($found_subjects) >= $no_of_required_essential_optional) {
+                $course->weight = $this->calculateWeight($course,$result);
                 array_push($eligble_courses, $course);
             }
         }
         //return eligble courses
         return response()->json(($eligble_courses), 200);
+    }
+    public function calculateWeight(Course $course, Result $result)
+    {
+        $weight =  $result->getOLevelWeight();
+        //calculate a level weight
+        $essential_list = $course->getEssentialSubjects();
+        Log::debug($essential_list);
+        $relevant_list = [];
+        $desirable_list = [];
+        $result_subjects = $result->result_subjects->where('level', Result::A_LEVEL);
+        Log::debug($result_subjects);
+
+        $essential_ids = (array_intersect($essential_list->pluck('id')->toArray(), $result_subjects->pluck('subject_id')->toArray()));
+        Log::debug($essential_ids);
+        //get items from the students results that are considered essential for this course
+        $essential = $result_subjects->whereIn('subject_id', $essential_ids);
+        Log::debug($essential);
+        $twoBestDone = $essential->sortByDesc('score')
+            ->take(2);
+        $relevant = collect($result_subjects);
+        $thirdBestDone = $relevant->diffAssoc($twoBestDone)->sortByDesc('grade')
+        ->take(1);
+        //get the grades of the two best done subjects
+        foreach ($twoBestDone as $subject){
+            $subjectWeight = $subject->score * 3;
+            $weight = $weight + $subjectWeight;
+        }
+        //add weight for the relevant subject
+        foreach ($thirdBestDone as $subject){
+            $subjectWeight = $subject->score * 2;
+            $weight = $weight + $subjectWeight;
+        }
+        // $weight = $weight + ($thirdBestDone * 2);
+        // add weight for the desirables
+        foreach ($desirable_list as $subject){
+            $subjectWeight = $subject->score * 1;
+            $weight = $weight + $subjectWeight;
+        }
+        Log::debug($weight);
+
+
+        return $weight;
     }
 }
