@@ -7,14 +7,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Rules\WeakPasswordRule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Log;
 use Ramsey\Uuid\Uuid;
+use Jenssegers\Agent\Agent;
+
 
 class RegisterController extends Controller
 {
+    use ValidatesRequests;
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -47,14 +53,23 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, User $user)
     {
-        $this->guard()->logout();
+        // $this->guard()->logout();
+        $user = $request->user();
+        $data = $this->getDeviceInfo($request);
+        $data['user_id'] = $user->id;
 
-        $message = __(
-            'We sent a confirmation email to :email. Please follow the instructions to complete your registration.',
-            ['email' => $user->email]
-        );
+        // $this->createNewLoginHistory($user, $data);
+        // $this->clearLoginAttempts($request);
 
-        return $this->respondWithCustomData(['message' => $message], Response::HTTP_CREATED);
+        $token = (string)$this->guard()->getToken();
+        $expiration = $this->guard()->getPayload()->get('exp');
+
+        return $this->respondWithCustomData([
+            'token'     => $token,
+            'tokenType' => 'Bearer',
+            'expiresIn' => $expiration - time(),
+        ],Response::HTTP_CREATED);
+
     }
 
     /**
@@ -108,5 +123,32 @@ class RegisterController extends Controller
             'email_verified_at'           => null,
             'locale'                      => $data['locale'] ?? 'pt_BR',
         ]);
+    }
+    private function getDeviceInfo(Request $request)
+    {
+        $agent = new Agent();
+        $agent->setUserAgent($request->userAgent());
+        $agent->setHttpHeaders($request->headers);
+
+        $geoip = geoip($request->ip());
+
+        return [
+            'user_id'          => auth()->id(),
+            'ip'               => $request->ip(),
+            'device'           => $agent->device(),
+            'platform'         => $agent->platform(),
+            'platform_version' => $agent->version($agent->platform()),
+            'browser'          => $agent->browser(),
+            'browser_version'  => $agent->version($agent->browser()),
+            'city'             => $geoip->getAttribute('city'),
+            'region_code'      => $geoip->getAttribute('state'),
+            'region_name'      => $geoip->getAttribute('state_name'),
+            'country_code'     => $geoip->getAttribute('iso_code'),
+            'country_name'     => $geoip->getAttribute('country'),
+            'continent_code'   => $geoip->getAttribute('continent'),
+            'latitude'         => $geoip->getAttribute('lat'),
+            'longitude'        => $geoip->getAttribute('lon'),
+            'zipcode'          => $geoip->getAttribute('postal_code'),
+        ];
     }
 }
