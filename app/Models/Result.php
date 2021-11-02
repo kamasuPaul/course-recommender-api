@@ -34,10 +34,15 @@ class Result extends Model
         self::GRADE_U,
         self::GRADE_P
     ];
+    const O_GRADES = [ 'D1', 'D2', 'C3', 'C4', 'C5', 'C6', 'P7', 'P8', 'F9', 'X' ];
 
     public function result_subjects()
     {
         return $this->hasMany(ResultSubject::class, 'result_id', 'id');
+    }
+    public function getOLevelWeight(){
+        $oLevelWeight = ResultSubject::where('result_id', $this->id)->where('level', Result::O_LEVEL)->sum('score');
+        return $oLevelWeight;
     }
 
     /**
@@ -68,20 +73,16 @@ class Result extends Model
             }
         }
         if ($level == self::O_LEVEL) {
-            switch ($grade) {
-                case self::GRADE_D:
-                    return 0.3;
-                case self::GRADE_C:
-                    return 0.2;
-                case self::GRADE_P:
-                    return 0.1;
-                case self::GRADE_F:
-                    return 0.0;
-                case self::GRADE_U:
-                    return 0.0;
-                default:
-                    return 0.0;
+            if(in_array($grade,['D1', 'D2'] )){
+                return 0.3;
             }
-        }
+            if(in_array($grade,['C3', 'C4', 'C5', 'C6'] )){
+                return 0.2;
+            }
+            if(in_array($grade,['P7', 'P8'] )){
+                return 0.1;
+            }
+            return 0.0;
+            }
     }
 }

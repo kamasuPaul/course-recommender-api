@@ -16,7 +16,7 @@ class CreateResultSubjectsTable extends Migration
         Schema::create('result_subjects', function (Blueprint $table) {
             $table->id();
             $table->enum('level',['O','A']);
-            $table->enum('grade',['A','B','C','D','E','F','O','U','P']);	
+            $table->enum('grade',['A','B','C','D','E','F','O','U','P','D1', 'D2', 'C3', 'C4', 'C5', 'C6', 'P7', 'P8', 'F9', 'X']);	
             $table->decimal('score');
             $table->foreignId('subject_id')->nullable(true);
             $table->foreignId('result_id')->nullable(false);
