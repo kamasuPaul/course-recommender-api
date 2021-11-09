@@ -18,7 +18,7 @@ class RepositoryServiceProvider extends ServiceProvider
     /**
      * Indicates if loading of the provider is deferred.
      */
-    protected bool $defer = true;
+    protected $defer = true;
 
     /**
      * Register the application services.

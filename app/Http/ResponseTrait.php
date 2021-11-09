@@ -12,12 +12,12 @@ trait ResponseTrait
     /**
      * The current class of resource to respond
      */
-    protected string $resourceItem;
+    protected $resourceItem;
 
     /**
      * The current class of collection resource to respond
      */
-    protected string $resourceCollection;
+    protected $resourceCollection;
 
     protected function respondWithCustomData($data, $status = 200): JsonResponse
     {
