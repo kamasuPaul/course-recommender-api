@@ -175,7 +175,8 @@ class CourseController extends Controller
             //get its essential_required subjects
             Log::debug($course->name);
             $essential_required = $course->getEssentialRequiredSubjects();
-            // Log::debug($essential_required);
+            Log::debug($essential_required);
+            Log::debug($subjects);
             //foreach essential_required subject
             $not_elible = false;
             foreach ($essential_required as $subject) {
@@ -184,6 +185,7 @@ class CourseController extends Controller
                 //if not found, add course to ineligble courses list.
                 if (!$subject_found) {
                     array_push($ineligble_courses, $course);
+                    Log::debug("not eligble");
                     $not_elible = true;
                     break;
                 }
@@ -191,24 +193,35 @@ class CourseController extends Controller
 
             //continue to next course in list
             if ($not_elible) continue;
+            Log::debug("partly eligble");
+
             //now look at the essential_optional
             //get its essential_optional subjects
             $essential_optional = $course->getEssentialOptionalSubjects();
+            Log::debug("essential optional subjects list");
+            Log::debug($essential_optional);
+            Log::debug("student subject's list");
+            Log::debug($subjects);
+
             //get no of required essential_optional subjects, using essential relationship
             $no_of_required_essential_optional = $course->get_no_of_required_essential_optional();
             //declare array of found subjects
             $found_subjects = [];
             //foreach subject in the student subject list
-            foreach ($subjects as $subject) {
+            foreach ($essential_optional as $subject) {
+                //find the essential optional subject in the student subject list
+                $subject_found = $subjects->firstWhere('subject_id', $subject->id);
+                Log::debug("per subject");
+                Log::debug($subject);
                 //if found is equal or greater than required, break the loop
                 if (count($found_subjects) >= $no_of_required_essential_optional) {
+                    Log::debug("found excedded ");
+                    Log::debug(count($found_subjects));
                     break;
                 }
-                //try and find it in the essential_optional subject list
-                $found = $essential_optional->where('subject_id', $subject->id)->first();
                 //add it to found subjects
-                if ($found) {
-                    array_push($found_subjects, $found);
+                if ($subject_found) {
+                    array_push($found_subjects, $subject_found);
                 }
             }
             //if found has equal or greater than required subjects, add course to eligble courses list
@@ -223,6 +236,7 @@ class CourseController extends Controller
     public function calculateWeight(Course $course, Result $result)
     {
         $weight =  $result->getOLevelWeight();
+        Log::alert($weight);
         //calculate a level weight
         $essential_list = $course->getEssentialSubjects();
         Log::debug($essential_list);
