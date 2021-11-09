@@ -74,8 +74,16 @@ class Course extends Model
             Log::debug("and");
             $essential_subjects = $this->getEssentialRequiredSubjects();
         }
+        if($relationship == "one"){
+            Log::debug("one");
+            $essential_subjects = $this->getEssentialRequiredSubjects();
+        }
         if($relationship == "two_best_done"){
             Log::debug("two_best_done");
+            $essential_subjects = $this->getEssentialOptionalSubjects();
+        }
+        if($relationship == "one_best_done"){
+            Log::debug("one_best_done");
             $essential_subjects = $this->getEssentialOptionalSubjects();
         }
         if($relationship == "and/or"){
@@ -85,11 +93,17 @@ class Course extends Model
             //add list1 to list2
             $essential_subjects = $list1->merge($list2);
         }
+        if($relationship == "and_or"){
+            Log::debug("and_or");
+            $list1 = $this->getEssentialRequiredSubjects();
+            $list2 = $this->getEssentialOptionalSubjects();
+            //add list1 to list2
+            $essential_subjects = $list1->merge($list2);
+        }
         return collect($essential_subjects);
     }
     public function get_no_of_required_essential_optional()
     {
-        return 0;
         $relationship = $this->essential_relationship;
         switch ($relationship) {
             case "and":
