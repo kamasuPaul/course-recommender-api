@@ -107,6 +107,9 @@ Route::group([
             'store'  => 'api.users.store',
             'update' => 'api.users.update',
         ]);
+    Route::prefix('users')->group(function () {
+        Route::get('/{user}/results', [ResultController::class, 'userResults']);
+    });
 
     Route::patch('password/update', [UserController::class, 'updatePassword'])
         ->name('api.password.update');
@@ -138,13 +141,13 @@ Route::prefix('universities')->middleware(['auth:api'])->group(function () {
     Route::delete('/{id}', [UniversityController::class, 'destroy']); //delete university
 });
 Route::prefix('campuses')->middleware(['auth:api'])->group(function () {
-    Route::post('/', [CampusController::class, 'store']);   
-    Route::get('/', [CampusController::class, 'index']); 
-    Route::get('/{id}', [CampusController::class, 'show']); 
-    Route::patch('/{id}', [CampusController::class, 'update']); 
+    Route::post('/', [CampusController::class, 'store']);
+    Route::get('/', [CampusController::class, 'index']);
+    Route::get('/{id}', [CampusController::class, 'show']);
+    Route::patch('/{id}', [CampusController::class, 'update']);
     Route::delete('/{id}', [CampusController::class, 'destroy']);
 });
-Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
+Route::group(['prefix' => 'courses', 'midddleware' => 'auth:api'], function () {
     Route::post('/', [CourseController::class, 'store']);
     Route::get('/eligble', [CourseController::class, 'getEligibleCourses']);
     Route::get('/', [CourseController::class, 'index']);
@@ -152,14 +155,14 @@ Route::group(['prefix'=>'courses','midddleware'=>'auth:api'],function () {
     Route::patch('/{course}', [CourseController::class, 'update']);
     Route::delete('/{course}', [CourseController::class, 'destroy']);
 });
-Route::group(['prefix'=>'subjects','midddleware'=>'auth:api'],function () {
+Route::group(['prefix' => 'subjects', 'midddleware' => 'auth:api'], function () {
     Route::post('/', [SubjectController::class, 'store']);
     Route::get('/', [SubjectController::class, 'index']);
     Route::get('/{id}', [SubjectController::class, 'show']);
     Route::patch('/{id}', [SubjectController::class, 'update']);
     Route::delete('/{id}', [SubjectController::class, 'destroy']);
 });
-Route::group(['prefix'=>'results','midddleware'=>'auth:api'],function () {
+Route::group(['prefix' => 'results', 'midddleware' => 'auth:api'], function () {
     Route::post('/', [ResultController::class, 'store']);
     Route::get('/', [ResultController::class, 'index']);
     Route::get('/{id}', [ResultController::class, 'show']);

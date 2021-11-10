@@ -171,4 +171,8 @@ class User extends Authenticatable implements JWTSubject, AuditableContract, Has
     {
         return $this->locale;
     }
+
+    public function results(){
+        return $this->hasMany(Result::class,'user_id','id')->latest();
+    }
 }

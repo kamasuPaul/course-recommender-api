@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Result;
 use App\Models\ResultSubject;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Log;
@@ -21,6 +22,16 @@ class ResultController extends Controller
         $results = Result::with('result_subjects')->get();
         return response()->json($results);
     }
+        /**
+     * Get results for a single user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function userResults(Request $request, User $user)
+    {
+        $results = Result::with('result_subjects')->where('user_id', $user->id)->get();
+        return response()->json($results, 200);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,7 +44,7 @@ class ResultController extends Controller
         $validatedData = $request->validate([
             'o_level_subjects' => 'required|array|min:8|max:16',
             'o_level_subjects.*.subject_id' => 'exists:subjects,id',
-            'o_level_subjects.*.grade' => Rule::in(['D','C', 'F', 'U']),	
+            'o_level_subjects.*.grade' => Rule::in(Result::O_GRADES),	
             'a_level_subjects'=>'required|array|min:5|max:6',
             'a_level_subjects.*.subject_id' => 'exists:subjects,id',
             'a_level_subjects.*.grade' => Rule::in(Result::GRADES),
@@ -44,7 +55,6 @@ class ResultController extends Controller
         //loop through the o level subjects and for each subject create a result
         foreach ($validatedData['o_level_subjects'] as $subject) {
             //log subject
-            Log::debug($subject);
             $result_subject = new ResultSubject();
             $result_subject->result_id = $result->id;
             $result_subject->level = Result::O_LEVEL;
