@@ -147,7 +147,8 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        $course->delete();
+        return response()->json("Successfully deleted", 200);
     }
 
     /**
