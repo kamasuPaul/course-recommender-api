@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: paul
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile.production
+    image: laravel-test-app
+    container_name: laravel-test-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - web-network
+  nginx:
+    image: nginx:1.21.4-alpine
+    container_name: laravel-testapp-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - web-network
+networks:
+  web-network:
+    driver: bridge
