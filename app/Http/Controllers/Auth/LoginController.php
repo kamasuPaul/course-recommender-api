@@ -76,10 +76,16 @@ class LoginController extends Controller
         $token = (string)$this->guard()->getToken();
         $expiration = $this->guard()->getPayload()->get('exp');
 
+        $role = (object)[];
+        $role->role_id = 1;
+        $role->name = "user";
+
+
         return $this->respondWithCustomData([
             'token'     => $token,
             'tokenType' => 'Bearer',
             'expiresIn' => $expiration - time(),
+            'roles' => collect([$role])
         ]);
     }
 
