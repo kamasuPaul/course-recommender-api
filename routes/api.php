@@ -32,6 +32,26 @@ use Illuminate\Support\Facades\Route;
 ###################
 # GUEST
 ###################
+//add test route that returns db connection env variables
+Route::prefix('test')->group(function () {
+    $db_connection = env('DB_CONNECTION');
+    $db_host = env('DB_HOST');
+    $db_port = env('DB_PORT');
+    $db_database = env('DB_DATABASE');
+    $db_username = env('DB_USERNAME');  
+    $db_password = env('DB_PASSWORD');
+    //return array of the env variables
+    Route::get('/', function () use ($db_connection, $db_host, $db_port, $db_database, $db_username, $db_password) {
+        return [
+            'DB_CONNECTION' => $db_connection,
+            'DB_HOST' => $db_host,
+            'DB_PORT' => $db_port,
+            'DB_DATABASE' => $db_database,
+            'DB_USERNAME' => $db_username,
+            'DB_PASSWORD' => $db_password
+        ];
+    });
+});
 
 Route::group(['middleware' => 'guest'], function () {
     Route::post('email/verify/{token}', [EmailVerificationController::class, 'verify'])
