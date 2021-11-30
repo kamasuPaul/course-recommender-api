@@ -27,10 +27,10 @@
     "laravel/ui": "^3.2",
     "league/flysystem-aws-s3-v3": "^1.0",
     "owen-it/laravel-auditing": "^12.0",
+    "php-open-source-saver/jwt-auth": "^1.2",
     "spatie/laravel-permission": "^3.0",
     "spatie/laravel-query-builder": "^3.6",
-    "torann/geoip": "^3.0",
-    "tymon/jwt-auth": "dev-develop"
+    "torann/geoip": "^3.0"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.7",
