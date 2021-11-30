@@ -4,7 +4,7 @@ namespace Tests;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 trait AttachJwtToken
 {
