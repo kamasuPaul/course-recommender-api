@@ -24,12 +24,12 @@ RUN chmod -R 777 storage
 
 # setup env variables that will come when building the image
 ENV APP_ENV=local
-ENV APP_DEBUG=true
+ENV APP_DEBUG=false
 ENV DB_CONNECTION=mysql
 ENV DB_HOST=localhost
 ENV DB_DATABASE=laravel
 ENV DB_USERNAME=root
-ENV DB_PASSWORD=root
+ENV DB_PASSWORD=password
 ENV DB_PORT=3306
 
 # setup apache
