@@ -1,4 +1,6 @@
-FROM php:7.4-apache
+FROM php:8.0-apache
+#install system depencies
+RUN apt-get update && apt-get install -y git curl zip unzip
 # install php extensions
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 # install composer
@@ -11,6 +13,8 @@ WORKDIR /var/www/
 RUN composer install
 # generate env file
 RUN touch .env
+# copy .env.example to .env
+COPY .env.example .env
 # generate app key
 RUN php artisan key:generate
 # clear application config cache
