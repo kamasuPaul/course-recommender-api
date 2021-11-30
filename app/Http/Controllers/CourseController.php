@@ -7,6 +7,7 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Models\Result;
 use App\Models\ResultSubject;
+use App\Models\User;
 use Doctrine\DBAL\Driver\PDO\Result as PDOResult;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
