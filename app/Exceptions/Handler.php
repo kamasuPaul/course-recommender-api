@@ -71,9 +71,9 @@ class Handler extends ExceptionHandler
                 break;
         }
 
-        if (!empty($status) && !empty($message)) {
-            return $this->respondWithCustomData(['message' => $message], $status);
-        }
+        // if (!empty($status) && !empty($message)) {
+        //     return $this->respondWithCustomData(['message' => $message], $status);
+        // }
 
         return parent::render($request, $exception);
     }
