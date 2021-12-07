@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Campus;
 use Illuminate\Http\Request;
-
+use App\Models\Subject;
 class CampusController extends Controller
 {
     /**
@@ -14,7 +14,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $courses = Campus::all();
+        $courses = Subject::all();
         return response()->json($courses,200);
     }
 
