@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\TwoFactorAuthenticationController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CutoffPointController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SubjectController;
@@ -167,7 +168,7 @@ Route::prefix('campuses')->middleware(['auth:api'])->group(function () {
     Route::patch('/{id}', [CampusController::class, 'update']);
     Route::delete('/{id}', [CampusController::class, 'destroy']);
 });
-Route::group(['prefix' => 'courses', 'midddleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'courses', 'middleware' => 'auth:api'], function () {
     Route::post('/', [CourseController::class, 'store']);
     Route::get('/eligble', [CourseController::class, 'getEligibleCourses']);
     Route::get('/', [CourseController::class, 'index']);
@@ -175,17 +176,24 @@ Route::group(['prefix' => 'courses', 'midddleware' => 'auth:api'], function () {
     Route::patch('/{course}', [CourseController::class, 'update']);
     Route::delete('/{course}', [CourseController::class, 'destroy']);
 });
-Route::group(['prefix' => 'subjects', 'midddleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'subjects', 'middleware' => 'auth:api'], function () {
     Route::post('/', [SubjectController::class, 'store']);
     Route::get('/', [SubjectController::class, 'index']);
     Route::get('/{id}', [SubjectController::class, 'show']);
     Route::patch('/{id}', [SubjectController::class, 'update']);
     Route::delete('/{id}', [SubjectController::class, 'destroy']);
 });
-Route::group(['prefix' => 'results', 'midddleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'results', 'middleware' => 'auth:api'], function () {
     Route::post('/', [ResultController::class, 'store']);
     Route::get('/', [ResultController::class, 'index']);
     Route::get('/{id}', [ResultController::class, 'show']);
     Route::patch('/{id}', [ResultController::class, 'update']);
     Route::delete('/{id}', [ResultController::class, 'destroy']);
+});
+Route::group(['prefix' => 'points', 'middleware' => 'auth:api'], function () {
+    Route::post('/', [CutoffPointController::class, 'store']);
+    Route::get('/', [CutoffPointController::class, 'index']);
+    Route::get('/{id}', [CutoffPointController::class, 'show']);
+    Route::patch('/{id}', [CutoffPointController::class, 'update']);
+    Route::delete('/{point}', [CutoffPointController::class, 'destroy']);
 });
