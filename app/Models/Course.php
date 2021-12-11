@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
+use App\Models\Campus;
 
 class Course extends Model
 {
@@ -28,7 +29,7 @@ class Course extends Model
     }
     public function campus()
     {
-        return $this->belongsTo(\App\Models\Campus::class);
+        return $this->belongsTo(Campus::class);
     }
     public function getEssentialRequiredAttribute(){
         return $this->getEssentialRequiredSubjects();
