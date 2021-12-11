@@ -11,6 +11,8 @@ COPY . /var/www/
 WORKDIR /var/www/
 # run composer install
 RUN composer install
+# run composer dump-autoload
+RUN composer dump-autoload -o
 # generate env file
 RUN touch .env
 # copy .env.example to .env
