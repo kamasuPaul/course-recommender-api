@@ -28,7 +28,7 @@ class Course extends Model
     }
     public function campus()
     {
-        return $this->belongsTo(Campus::class);
+        return $this->belongsTo(\App\Models\Campus::class);
     }
     public function getEssentialRequiredAttribute(){
         return $this->getEssentialRequiredSubjects();
