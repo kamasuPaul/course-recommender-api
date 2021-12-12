@@ -6,12 +6,11 @@ use App\Http\Resources\CourseCollection;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Models\Result;
-use App\Models\ResultSubject;
-use App\Models\User;
-use Doctrine\DBAL\Driver\PDO\Result as PDOResult;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Log;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CourseController extends Controller
 {
@@ -26,9 +25,16 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::with('campus')->get();
+        $per_page = min($request->input('per_page', 50), 200);
+        $courses = QueryBuilder::for(Course::class)
+            ->allowedFilters([
+                'name',
+                AllowedFilter::exact('alias_code'),
+                AllowedFilter::exact('code'),
+            ])
+            ->paginate($per_page);
         return response()->json($courses, 200);
     }
 
