@@ -27,7 +27,7 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        $per_page = min($request->input('per_page', 50), 200);
+        $per_page = min($request->input('per_page', 10), 50);
         $courses = QueryBuilder::for(Course::class)
             ->allowedFilters([
                 'name',
