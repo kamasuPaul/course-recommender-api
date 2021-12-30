@@ -15,6 +15,13 @@ class CreateSchoolsTable extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable(false);
+            $table->string('district')->nullable();
+            $table->string('address')->nullable();
+            $table->string('uneb_number')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
