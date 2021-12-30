@@ -13,7 +13,7 @@ class StoreSchoolRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +24,8 @@ class StoreSchoolRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'district' => 'string|max:255',
+            'name' => 'required|string|max:255|unique:schools,name',
+            'district' => 'required|string|max:255',
             'address' => 'string|max:255',
             'phone' => 'string|max:255',
             'email' => 'string|max:255',
