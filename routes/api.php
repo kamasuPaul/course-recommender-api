@@ -13,6 +13,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CutoffPointController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UserController;
@@ -196,4 +197,11 @@ Route::group(['prefix' => 'points', 'middleware' => 'auth:api'], function () {
     Route::get('/{id}', [CutoffPointController::class, 'show']);
     Route::patch('/{id}', [CutoffPointController::class, 'update']);
     Route::delete('/{point}', [CutoffPointController::class, 'destroy']);
+});
+Route::group(['prefix' => 'schools', 'middleware' => 'auth:api'], function () {
+    Route::post('/', [SchoolController::class, 'store']);
+    Route::get('/', [SchoolController::class, 'index']);
+    Route::get('/{school}', [SchoolController::class, 'show']);
+    Route::patch('/{school}', [SchoolController::class, 'update']);
+    Route::delete('/{school}', [SchoolController::class, 'destroy']);
 });
