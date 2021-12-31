@@ -30,6 +30,7 @@ class UniversityController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'short_name' => 'string|max:255',
+            'ownership' => 'string|in:public,private',
             'address' => 'string|max:255',
             'city' => 'string|max:255',
             'zip' => 'string|max:255',
@@ -37,6 +38,8 @@ class UniversityController extends Controller
             'fax' => 'string|max:255',
             'email' => 'string|max:255',
             'website' => 'string|max:255',
+            'portal_url' => 'string|max:255',
+            'no_of_campuses' => 'integer|min:1',
             'logo' => 'string|max:255',
             'description' => 'string|max:255',
             'mission' => 'string|max:255',
@@ -55,8 +58,12 @@ class UniversityController extends Controller
         $university->city = $request->city;
         $university->phone = $request->phone;
         $university->fax = $request->fax;
+        $university->zip = $request->zip;
         $university->email = $request->email;
         $university->website = $request->website;
+        $university->ownership = $request->ownership;
+        $university->no_of_campuses = $request->no_of_campuses;
+        $university->portal_url = $request->portal_url;
         $university->logo = $request->logo;
         $university->description = $request->description;
         $university->mission = $request->mission;
