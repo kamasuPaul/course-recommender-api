@@ -22,6 +22,8 @@ class Result extends Model
     const GRADE_O = 'O';
     const GRADE_U = 'U';
     const GRADE_P = 'P';
+    const GRADE_1 = '1';
+    const GRADE_0 = '0';
     //group grades into array constant
     const GRADES = [
         self::GRADE_A,
@@ -32,7 +34,9 @@ class Result extends Model
         self::GRADE_F,
         self::GRADE_O,
         self::GRADE_U,
-        self::GRADE_P
+        self::GRADE_P,
+        self::GRADE_1,
+        self::GRADE_0
     ];
     const O_GRADES = [ 'D1', 'D2', 'C3', 'C4', 'C5', 'C6', 'P7', 'P8', 'F9', 'X' ];
 
@@ -67,6 +71,10 @@ class Result extends Model
                 case self::GRADE_F:
                     return 0;
                 case self::GRADE_U:
+                    return 0;
+                case self::GRADE_1:
+                    return 1;
+                case self::GRADE_0:
                     return 0;
                 default:
                     return 0;
