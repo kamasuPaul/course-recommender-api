@@ -166,8 +166,6 @@ class CourseController extends Controller
         $validated = $request->validate(
             [
                 'result' => 'required|exists:results,id',
-                // 'user' => 'required|exists:users,id'
-                'gender' => 'required|in:male,female'
             ]
         );
         $result = Result::with('result_subjects')->findOrFail($request->result);
@@ -235,7 +233,7 @@ class CourseController extends Controller
             }
             //if found has equal or greater than required subjects, add course to eligble courses list
             if (count($found_subjects) >= $no_of_required_essential_optional) {
-                $course->weight = $this->calculateWeight($course,$result);
+                $course->weight = $this->calculateWeight($course, $result);
                 array_push($eligble_courses, $course);
             }
         }
@@ -263,24 +261,28 @@ class CourseController extends Controller
             ->take(2);
         $relevant = collect($result_subjects);
         $thirdBestDone = $relevant->diffAssoc($twoBestDone)->sortByDesc('grade')
-        ->take(1);
+            ->take(1);
         //get the grades of the two best done subjects
-        foreach ($twoBestDone as $subject){
+        foreach ($twoBestDone as $subject) {
             $subjectWeight = $subject->score * 3;
             $weight = $weight + $subjectWeight;
         }
         //add weight for the relevant subject
-        foreach ($thirdBestDone as $subject){
+        foreach ($thirdBestDone as $subject) {
             $subjectWeight = $subject->score * 2;
             $weight = $weight + $subjectWeight;
         }
         // $weight = $weight + ($thirdBestDone * 2);
         // add weight for the desirables
-        foreach ($desirable_list as $subject){
+        foreach ($desirable_list as $subject) {
             $subjectWeight = $subject->score * 1;
             $weight = $weight + $subjectWeight;
         }
         Log::debug($weight);
+        //add a weight of 1.5 for a female student
+        if ($result->gender == 'female') {
+            $weight = $weight + 1.5;
+        }
 
 
         return $weight;
