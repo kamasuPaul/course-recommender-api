@@ -48,9 +48,11 @@ class ResultController extends Controller
             'a_level_subjects'=>'required|array|min:5|max:6',
             'a_level_subjects.*.subject_id' => 'exists:subjects,id',
             'a_level_subjects.*.grade' => Rule::in(Result::GRADES),
+            'gender'=>'required|in:male,female'
         ]);
         $result = new Result();
         $result->user_id = auth()->user()->id;
+        $result->gender = $request->gender;
         $result->save();
         //loop through the o level subjects and for each subject create a result
         foreach ($validatedData['o_level_subjects'] as $subject) {
@@ -78,6 +80,7 @@ class ResultController extends Controller
         $a_level_subjects = ResultSubject::where('result_id',$result->id)->level(Result::A_LEVEL)->get();
         $result->o_level_subjects = $o_level_subjects;
         $result->a_level_subjects = $a_level_subjects;
+        
         return response()->json($result,200);
     }
 
