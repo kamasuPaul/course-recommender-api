@@ -48,6 +48,15 @@ class Result extends Model
         $oLevelWeight = ResultSubject::where('result_id', $this->id)->where('level', Result::O_LEVEL)->sum('score');
         return $oLevelWeight;
     }
+    public function getDesirableSubjectsWeight(){
+        return ResultSubject::
+        where('result_id', $this->id)
+        ->where('level', Result::A_LEVEL)
+        ->whereHas('subject', function($query) {
+            $query->where('subsidiary',true);
+        })
+        ->sum('score');
+    }
 
     /**
      * Get score from grade and level

@@ -273,11 +273,12 @@ class CourseController extends Controller
             $weight = $weight + $subjectWeight;
         }
         // $weight = $weight + ($thirdBestDone * 2);
-        // add weight for the desirables
-        foreach ($desirable_list as $subject) {
-            $subjectWeight = $subject->score * 1;
-            $weight = $weight + $subjectWeight;
-        }
+        // add weight for the desirable subjects
+        $weight = $weight + $result->getDesirableSubjectsWeight();
+        // foreach ($desirable_list as $subject) {
+        //     $subjectWeight = $subject->score * 1;
+        //     $weight = $weight + $subjectWeight;
+        // }
         Log::debug($weight);
         //add a weight of 1.5 for a female student
         if ($result->gender == 'female') {
